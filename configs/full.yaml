@@ -1,0 +1,57 @@
+# M/full tier: all 15 corruptions x 5 severities plus clean, all evaluation
+# objects. Launch ONLY after the S tier passes its gates.
+#
+# Whole-project accounting (worst case, nothing reused):
+#   XS 0.5 + S 2.0 + full 3.4 = 5.9 GPU-hours  (cap: 6.0)
+#   $0.15 + $0.54 + $0.92     = $1.61          (expected A5000 ceiling: $1.62)
+# The absolute fallback-hardware ceiling of $3.60 stays untouched.
+tier: full
+device: cuda
+seed: 20260809
+run_dir: runs/full
+
+data:
+  root: data/modelnet40c
+  split_file: artifacts/split.json
+  max_objects: null
+  max_calibration_objects: null
+
+projection:
+  batch_size: 64
+
+model:
+  precision: fp16
+  cache_dir: .cache/open_clip
+  pinned_checkpoint_sha256: null
+
+conditions:
+  include_clean: true
+  corruptions:
+    - occlusion
+    - lidar
+    - density_inc
+    - density
+    - cutout
+    - uniform
+    - gaussian
+    - impulse
+    - upsampling
+    - background
+    - rotation
+    - shear
+    - distortion
+    - distortion_rbf
+    - distortion_rbf_inv
+  severities: [1, 2, 3, 4, 5]
+
+evaluation:
+  bootstrap_samples: 1000
+  bootstrap_seed: 7
+
+budget:
+  gpu: RTX A5000
+  max_gpu_hours: 3.4
+  max_usd: 0.92
+  max_wall_hours: 4.0
+  max_vram_gb: 20.0
+  max_ram_gb: 25.0

@@ -1,0 +1,11 @@
+# Local / free-tier environment: projector unit tests, split construction,
+# metric and calibration tests, and the 16-object CPU smoke run.
+# open_clip is optional locally; everything except `infer` runs without it.
+numpy>=1.26
+torch>=2.2
+pyyaml>=6.0
+tqdm>=4.66
+psutil>=5.9
+pandas>=2.2
+matplotlib>=3.8
+pytest>=8.0

@@ -1,0 +1,39 @@
+# XS tier: 100 evaluation objects, clean + two corruptions x two severities.
+# Gate: <= 0.5 GPU-hour and <= $0.15 on the A5000.
+# This is the tier the acceptance criteria require a fresh pod to reproduce.
+tier: xs
+device: cuda
+seed: 20260809
+run_dir: runs/xs
+
+data:
+  root: data/modelnet40c
+  split_file: artifacts/split.json
+  max_objects: 100
+  max_calibration_objects: 100
+
+projection:
+  batch_size: 64
+
+model:
+  precision: fp16
+  cache_dir: .cache/open_clip
+  # Filled in after the first successful download; a mismatch then aborts the run.
+  pinned_checkpoint_sha256: null
+
+conditions:
+  include_clean: true
+  corruptions: [gaussian, cutout]   # constants.XS_TIER_CORRUPTIONS
+  severities: [1, 5]                # constants.XS_TIER_SEVERITIES
+
+evaluation:
+  bootstrap_samples: 200
+  bootstrap_seed: 7
+
+budget:
+  gpu: RTX A5000
+  max_gpu_hours: 0.5
+  max_usd: 0.15
+  max_wall_hours: 4.0
+  max_vram_gb: 20.0
+  max_ram_gb: 25.0

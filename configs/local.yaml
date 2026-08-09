@@ -1,0 +1,38 @@
+# Local / free smoke tier. CPU or an already-owned local GPU. No Runpod, no spend.
+# Purpose: projector unit tests plus 16 objects end to end, per the ticket's
+# "Local/free smoke" gate. Nothing here is reportable.
+tier: local
+device: cpu
+seed: 20260809
+run_dir: runs/local
+
+data:
+  root: data/modelnet40c
+  split_file: artifacts/split.json
+  max_objects: 16
+  max_calibration_objects: 16
+
+projection:
+  batch_size: 8
+
+model:
+  precision: fp32
+  cache_dir: .cache/open_clip
+
+conditions:
+  include_clean: true
+  corruptions: [gaussian]
+  severities: [5]
+
+evaluation:
+  bootstrap_samples: 100
+  bootstrap_seed: 7
+
+# Not billable (CPU), but the gates stay wired so the code path is identical.
+budget:
+  gpu: RTX A5000
+  max_gpu_hours: 0.1
+  max_usd: 0.03
+  max_wall_hours: 1.0
+  max_vram_gb: 20.0
+  max_ram_gb: 25.0

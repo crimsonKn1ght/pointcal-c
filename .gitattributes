@@ -1,0 +1,14 @@
+# Normalize to LF in the repository and in the working tree.
+# The shell scripts under scripts/ run on a Linux Runpod pod; if they were
+# checked out with CRLF endings, bash would fail on the shebang line.
+* text=auto eol=lf
+
+*.sh text eol=lf
+*.py text eol=lf
+*.yaml text eol=lf
+*.md text eol=lf
+
+*.png binary
+*.pdf binary
+*.npy binary
+*.npz binary

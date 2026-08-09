@@ -1,0 +1,34 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pointcal-c"
+version = "0.1.0"
+description = "Low-cost selective zero-shot 3D recognition under point-cloud corruption"
+readme = "README.md"
+requires-python = ">=3.10"
+license = { file = "LICENSE" }
+authors = [{ name = "Gourab Roy" }]
+dependencies = [
+    "numpy",
+    "torch",
+    "pyyaml",
+    "tqdm",
+    "psutil",
+]
+
+[project.optional-dependencies]
+clip = ["open_clip_torch", "huggingface_hub"]
+report = ["pandas", "matplotlib"]
+dev = ["pytest"]
+
+[project.scripts]
+pointcal-c = "pointcal_c.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"

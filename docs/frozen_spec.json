@@ -1,0 +1,228 @@
+{
+  "spec_hash": "ca487597c978ab17217bd640ab8bf95c8a21db0eaacd51ae5ba4b00618dcc820",
+  "frozen_spec": {
+    "classes": [
+      "airplane",
+      "bathtub",
+      "bed",
+      "bench",
+      "bookshelf",
+      "bottle",
+      "bowl",
+      "car",
+      "chair",
+      "cone",
+      "cup",
+      "curtain",
+      "desk",
+      "door",
+      "dresser",
+      "flower_pot",
+      "glass_box",
+      "guitar",
+      "keyboard",
+      "lamp",
+      "laptop",
+      "mantel",
+      "monitor",
+      "night_stand",
+      "person",
+      "piano",
+      "plant",
+      "radio",
+      "range_hood",
+      "sink",
+      "sofa",
+      "stairs",
+      "stool",
+      "table",
+      "tent",
+      "toilet",
+      "tv_stand",
+      "vase",
+      "wardrobe",
+      "xbox"
+    ],
+    "prompt_ensemble": [
+      "a depth map of a {}.",
+      "a point cloud depth map of a {}.",
+      "a rendered depth image of a {}.",
+      "a grayscale depth projection of a {}.",
+      "a 3d model of a {} rendered as a depth map.",
+      "a depth map photo of the {}.",
+      "a low resolution depth map of a {}.",
+      "a depth map of the big {}."
+    ],
+    "camera_frames": [
+      [
+        "front",
+        [
+          0.0,
+          0.0,
+          -1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      [
+        "right",
+        [
+          -1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      [
+        "back",
+        [
+          0.0,
+          0.0,
+          1.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      [
+        "left",
+        [
+          1.0,
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          1.0,
+          0.0
+        ]
+      ],
+      [
+        "top",
+        [
+          0.0,
+          -1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          -1.0
+        ]
+      ],
+      [
+        "bottom",
+        [
+          0.0,
+          1.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0,
+          1.0
+        ]
+      ]
+    ],
+    "view_subsets": {
+      "1": [
+        "front"
+      ],
+      "3": [
+        "front",
+        "right",
+        "top"
+      ],
+      "6": [
+        "front",
+        "right",
+        "back",
+        "left",
+        "top",
+        "bottom"
+      ]
+    },
+    "image_size": 224,
+    "raster_size": 64,
+    "fill_scale": 0.9,
+    "splat_radius": 1,
+    "camera_distance": 2.0,
+    "depth_floor": 0.2,
+    "corruptions": [
+      "occlusion",
+      "lidar",
+      "density_inc",
+      "density",
+      "cutout",
+      "uniform",
+      "gaussian",
+      "impulse",
+      "upsampling",
+      "background",
+      "rotation",
+      "shear",
+      "distortion",
+      "distortion_rbf",
+      "distortion_rbf_inv"
+    ],
+    "severities": [
+      1,
+      2,
+      3,
+      4,
+      5
+    ],
+    "s_tier": [
+      [
+        "gaussian",
+        "cutout",
+        "rotation",
+        "lidar"
+      ],
+      [
+        1,
+        3,
+        5
+      ]
+    ],
+    "xs_tier": [
+      [
+        "gaussian",
+        "cutout"
+      ],
+      [
+        1,
+        5
+      ]
+    ],
+    "view_aggregation": "mean_logits",
+    "disagreement": "mean_pairwise_jsd",
+    "confidence_methods": [
+      "msp",
+      "temperature",
+      "disagreement",
+      "combined"
+    ],
+    "coverage_levels": [
+      0.9,
+      0.8,
+      0.7
+    ],
+    "ece_bins": 15,
+    "calibration_fraction": 0.2,
+    "split_seed": 20260809,
+    "clip": [
+      "ViT-B-32",
+      "laion2b_s34b_b79k"
+    ]
+  }
+}
