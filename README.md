@@ -167,15 +167,30 @@ runs/<tier>/
 ## Status
 
 Scaffold complete and tested on synthetic data; **no paid run has been executed
-yet.** Before the first one:
+yet.**
 
-- [ ] Complete the related-work audit in `docs/novelty_search_log.md` and fix
-      the claim wording accordingly.
+The related-work audit is done ([docs/novelty_search_log.md](docs/novelty_search_log.md),
+2026-08-09). Nothing found occupies the intersection of zero-shot CLIP-to-3D,
+ModelNet40-C, and calibration/selective prediction, so the permitted claim is:
+
+> To our knowledge, as of August 2026, this is the first calibration and
+> selective-prediction audit of training-free CLIP-to-3D transfer under the
+> ModelNet40-C corruption benchmark.
+
+The audit came back clean on the combination, **not** on the components:
+cross-view disagreement is prior art, and calibration degrading under 3D
+corruption is a confirmation rather than a discovery. Both weakenings are
+mandatory in the write-up.
+
+Before the first paid run:
+
 - [ ] Run `verify-data` against the real corpus and confirm the corruption file
       naming in `constants.corruption_filename()`.
 - [ ] Pin `model.pinned_checkpoint_sha256` from the first successful download.
 - [ ] Re-run `pointcal-c freeze` and record the spec hash in
       `docs/provenance.md`.
+- [ ] Re-run the bibliography through a working citation checker; the audit
+      confirmed identifiers by direct fetch but could not check retractions.
 
 ## Licences
 

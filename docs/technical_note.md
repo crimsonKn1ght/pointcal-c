@@ -21,8 +21,31 @@ Three scalars are fit, all on clean data from a held-out calibration set of
 objects: one temperature, and two weights (plus bias) blending calibrated
 confidence with cross-view disagreement.
 
-**Contribution.** [FILL after `docs/novelty_search_log.md` is complete. Until
-then, no novelty claim may appear in this document.]
+**Contribution.** To our knowledge, as of August 2026, this is the first
+calibration and selective-prediction audit of training-free CLIP-to-3D transfer
+under the ModelNet40-C corruption benchmark. That sentence is dated and
+checkable on purpose: it claims a gap in a specific literature at a specific
+time, not priority and not superiority.
+
+The related-work audit (`docs/novelty_search_log.md`, completed 2026-08-09)
+came back clean on the *combination* and explicitly not on the components. The
+following must therefore be stated here, not buried:
+
+* **Cross-view disagreement is not a novel signal.** MVF-PointCLIP
+  (Neurocomputing 2025) already uses inter-view similarity and per-sample
+  view-distribution modelling inside training-free CLIP-to-3D, and
+  disagreement-based uncertainty is standard in the ensemble literature. The
+  contribution here is the *use* - abstention under corruption - not the idea.
+* **Calibration degrading under 3D corruption is a confirmation, not a
+  discovery.** ModelNet40-E reports it for trained 3D backbones and Calib3D
+  reports it for LiDAR segmentation under domain shift. H1 extends a known
+  result to a new setting.
+* **CLIP being poorly calibrated is established.** Prior work already finds
+  max-softmax unreliable for CLIP; observing it under 3D corruption extends
+  that finding rather than establishing it.
+* **No priority claim over concurrent work.** The nearest papers are from
+  August 2025 and ICML 2026; this area moves faster than the audit's shelf
+  life.
 
 ## 2. Setup
 
@@ -175,17 +198,50 @@ Artifacts: `runs/<tier>/logits/*.npz` (raw per-view logits),
 
 ## References
 
-- Zhang et al., *PointCLIP: Point Cloud Understanding by CLIP*, CVPR 2022.
-- Sun et al., *Benchmarking Robustness of 3D Point Cloud Recognition Against
-  Common Corruptions* (ModelNet40-C). Verify the exact citation with
-  `Scholar Sidekick` before submission.
-- Guo et al., *On Calibration of Modern Neural Networks*, ICML 2017.
-- Geifman & El-Yaniv, *Selective Classification for Deep Neural Networks*,
-  NeurIPS 2017.
-- Ilg et al. / Lakshminarayanan et al. for ensemble-disagreement uncertainty --
-  `[FILL: pick the citation that actually matches the disagreement framing used
-  here, and verify it]`.
+Identifier-verified 2026-08-09 by fetching each arXiv abstract page and
+confirming the title matches the identifier. Full details and the axis
+breakdown are in `docs/novelty_search_log.md`.
 
-> Every reference above must be verified with the citation-checking tooling
-> before this note is circulated. Do not ship a DOI that has not been resolved
-> against its claimed title.
+**Method and data**
+
+- Zhang, Guo, Zhang, Li, Miao, Cui, Qiao, Gao, Li. *PointCLIP: Point Cloud
+  Understanding by CLIP.* CVPR 2022. [arXiv:2112.02413](https://arxiv.org/abs/2112.02413)
+- Sun, Zhang, Kailkhura, Yu, Xiao, Mao. *Benchmarking Robustness of 3D Point
+  Cloud Recognition Against Common Corruptions* (ModelNet40-C). ICLR 2022.
+  [arXiv:2201.12296](https://arxiv.org/abs/2201.12296)
+- Zhu, Zhang, He, Guo, Zeng, Qin, Zhang, Gao. *PointCLIP V2: Prompting CLIP and
+  GPT for Powerful 3D Open-world Learning.* ICCV 2023.
+  [arXiv:2211.11682](https://arxiv.org/abs/2211.11682)
+
+**Nearest related work** (see the audit for why none of these occupy the same
+intersection)
+
+- Alonso, Li, Li. *ModelNet40-E: An Uncertainty-Aware Benchmark for Point Cloud
+  Classification.* 2025. [arXiv:2508.01269](https://arxiv.org/abs/2508.01269)
+- Kong, Xu, Cen, Zhang, Pan, Chen, Liu. *Calib3D: Calibrating Model Preferences
+  for Reliable 3D Scene Understanding.* WACV 2025.
+  [arXiv:2403.17010](https://arxiv.org/abs/2403.17010)
+- Lu, Tao, Qiu, Zhang, Yang, Zhao. *Calibrating Uncertainty for Zero-Shot
+  Adversarial CLIP.* ICML 2026. [arXiv:2512.12997](https://arxiv.org/abs/2512.12997)
+- *MVF-PointCLIP: Training-free multi-view fusion PointCLIP for zero-shot 3D
+  classification.* Neurocomputing, 2025.
+  [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0925231225018600)
+
+**Not to be confused with the benchmark used here**
+
+- Ren, Pan, Liu. *Benchmarking and Analyzing Point Cloud Classification under
+  Corruptions* (ModelNet-C, a different benchmark). ICML 2022.
+  [arXiv:2202.03377](https://arxiv.org/abs/2202.03377)
+
+**Method background**
+
+- Guo, Pleiss, Sun, Weinberger. *On Calibration of Modern Neural Networks.*
+  ICML 2017. `[FILL: verify identifier before submission]`
+- Geifman, El-Yaniv. *Selective Classification for Deep Neural Networks.*
+  NeurIPS 2017. `[FILL: verify identifier before submission]`
+
+> The arXiv identifiers above were confirmed against their titles, but the
+> citation-integrity tooling was unavailable during the audit, so **retraction
+> status has not been checked**. Re-run the full bibliography through a working
+> checker before circulating this note, and resolve the two background
+> references that still carry no verified identifier.
