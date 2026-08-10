@@ -21,8 +21,8 @@ One GPU only. `budget.detect_gpu()` reads the device name at startup and raises
 on more than one visible device.
 
 Targets: <= 20 GB peak VRAM, <= 25 GB system RAM. Both are checked at every
-batch, and a breach is an instruction to reduce batch size -- never to rent
-larger hardware.
+batch. A breach is an instruction to reduce batch size, never to rent larger
+hardware.
 
 ## Tier gates
 
@@ -55,8 +55,8 @@ logits. An analysis mistake therefore costs nothing to fix, and re-running an
 ablation never re-runs CLIP.
 
 Cache size at full scale: ~1 MB per condition per prompt mode, so ~150 MB for
-all 76 conditions -- versus the hundreds of GB that caching rendered images
-would need. Image caches are forbidden by the ticket and are never written.
+all 76 conditions, versus the hundreds of GB that caching rendered images would
+need. Image caches are forbidden by the ticket and are never written.
 
 ## Escalation policy
 

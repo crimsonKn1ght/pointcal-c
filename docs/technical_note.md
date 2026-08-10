@@ -13,9 +13,9 @@ Target length: 2-4 pages.
 A frozen OpenCLIP ViT-B/32 classifies ModelNet40 objects zero-shot by rendering
 each point cloud as six orthographic depth maps and scoring them against a
 fixed prompt ensemble. Nothing in the backbone is trained. The question is not
-how accurate this is -- it is how *trustworthy its confidence* is once the
-point clouds are corrupted, and whether cheap post-hoc machinery can recover
-useful selective behaviour.
+how accurate this is; it is how *trustworthy its confidence* is once the point
+clouds are corrupted, and whether cheap post-hoc machinery can recover useful
+selective behaviour.
 
 Three scalars are fit, all on clean data from a held-out calibration set of
 objects: one temperature, and two weights (plus bias) blending calibrated
@@ -35,7 +35,7 @@ following must therefore be stated here, not buried:
   (Neurocomputing 2025) already uses inter-view similarity and per-sample
   view-distribution modelling inside training-free CLIP-to-3D, and
   disagreement-based uncertainty is standard in the ensemble literature. The
-  contribution here is the *use* - abstention under corruption - not the idea.
+  contribution here is the *use* (abstention under corruption), not the idea.
 * **Calibration degrading under 3D corruption is a confirmation, not a
   discovery.** ModelNet40-E reports it for trained 3D backbones and Calib3D
   reports it for LiDAR segmentation under domain shift. H1 extends a known
@@ -85,7 +85,7 @@ Fitted temperature: `[FILL]`.
 
 *Figure 2: ECE vs severity, by confidence method.*
 
-The question H2 poses is not whether temperature scaling helps -- it is whether
+The question H2 poses is not whether temperature scaling helps; it is whether
 a temperature fit on clean data still helps once the input distribution moves.
 Residual corrupted-minus-clean ECE after scaling: `[FILL]`.
 
@@ -121,7 +121,7 @@ From `ablations.csv`, all recomputed offline from the same cached logits:
 | prompt ensemble vs single prompt | `[FILL]` | `[FILL]` |
 | JSD vs logit-variance disagreement | (no effect by construction) | `[FILL]` |
 
-Confidence methods cannot change accuracy -- the prediction is fixed by the
+Confidence methods cannot change accuracy: the prediction is fixed by the
 aggregation. Only the view-count and prompt ablations move accuracy; the rest
 move only ranking quality.
 
@@ -140,10 +140,10 @@ Tiers actually run: `[FILL]`. Gates tripped, if any, and the fallback taken:
 
 From `examples.json`:
 
-- **Confidently wrong**: `[FILL]` -- which corruptions produce high-confidence
+- **Confidently wrong**: `[FILL]`. Which corruptions produce high-confidence
   errors, and whether the views agreed while being wrong together.
-- **Correctly abstained**: `[FILL]` -- errors the combined score ranked lowest.
-- **High view disagreement**: `[FILL]` -- whether disagreement tracks the
+- **Correctly abstained**: `[FILL]`. Errors the combined score ranked lowest.
+- **High view disagreement**: `[FILL]`. Whether disagreement tracks the
   corruptions that break the silhouette (occlusion, cutout, lidar) more than
   those that perturb points locally (gaussian, uniform).
 

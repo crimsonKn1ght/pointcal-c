@@ -1,7 +1,7 @@
 """Evaluation driver: cached logits in, machine-readable results out.
 
 Everything here runs on CPU from the logit cache. No CLIP forward pass, no GPU
-time, no dollars -- which is why every ablation is affordable and why a mistake
+time, no dollars: this is why every ablation is affordable and why a mistake
 in analysis costs nothing to fix.
 
 Reporting scopes, per the ticket: overall (clean and corrupted), per corruption

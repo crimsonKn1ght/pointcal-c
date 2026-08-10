@@ -1,6 +1,6 @@
 # Data (never commit the 2.0 GB ModelNet40-C artifact).
 # Exclude the contents rather than the directory itself, so the negation below
-# can still take effect -- git does not descend into an excluded directory.
+# can still take effect: git does not descend into an excluded directory.
 data/*
 !data/README.md
 

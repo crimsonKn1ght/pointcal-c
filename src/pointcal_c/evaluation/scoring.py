@@ -1,6 +1,6 @@
 """Turn cached logits into the four confidence baselines under comparison.
 
-All four share one prediction vector -- ``argmax`` of the mean per-view logits --
+All four share one prediction vector, ``argmax`` of the mean per-view logits,
 and differ only in how they *rank* those predictions. That invariant is asserted
 here, not assumed.
 

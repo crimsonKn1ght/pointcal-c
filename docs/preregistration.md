@@ -73,11 +73,11 @@ parameter, prompt, threshold or view geometry.
 
 **Confidence methods.** Exactly four, no more:
 
-1. `msp` - raw maximum softmax probability;
-2. `temperature` - clean-fit scalar temperature, then maximum softmax;
-3. `disagreement` - `1 -` mean pairwise Jensen-Shannon divergence between
+1. `msp`: raw maximum softmax probability;
+2. `temperature`: clean-fit scalar temperature, then maximum softmax;
+3. `disagreement`: `1 -` mean pairwise Jensen-Shannon divergence between
    per-view softmax distributions, normalized by `ln 2`;
-4. `combined` - `sigmoid(w0 + w1 * logit(p_cal) + w2 * d)`, fit on clean
+4. `combined`: `sigmoid(w0 + w1 * logit(p_cal) + w2 * d)`, fit on clean
    calibration objects against the binary correctness indicator.
 
 Mean pairwise JSD is declared as the primary disagreement statistic *before*
@@ -118,9 +118,9 @@ these. The hard machine-price ceiling is $0.60/hr.
 
 ## What would falsify each hypothesis
 
-* **H1** - accuracy or calibration flat or improving with severity.
-* **H2** - temperature scaling failing to improve clean ECE, or fully closing
+* **H1**: accuracy or calibration flat or improving with severity.
+* **H2**: temperature scaling failing to improve clean ECE, or fully closing
   the corrupted-vs-clean calibration gap.
-* **H3** - `combined` failing to beat `msp` on AURC and selective risk, with
+* **H3**: `combined` failing to beat `msp` on AURC and selective risk, with
   intervals that exclude an improvement. This outcome is publishable as a
   negative result and must be reported as prominently as a positive one.

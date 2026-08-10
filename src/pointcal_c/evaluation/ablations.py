@@ -2,13 +2,13 @@
 
 Ticket list:
 
-* **1 / 3 / 6 views** -- re-aggregate a view subset from the same cache.
-* **temperature on / off** -- the ``msp`` and ``temperature`` methods already
+* **1 / 3 / 6 views**: re-aggregate a view subset from the same cache.
+* **temperature on / off**: the ``msp`` and ``temperature`` methods already
   differ by exactly this, so it is a method contrast, not a rerun.
-* **disagreement on / off** -- the ``temperature`` and ``combined`` methods
+* **disagreement on / off**: the ``temperature`` and ``combined`` methods
   differ by exactly the disagreement feature; the secondary statistic
   (logit variance) is run as an extra configuration.
-* **prompt ensemble vs single canonical prompt** -- both text classifiers were
+* **prompt ensemble vs single canonical prompt**: both text classifiers were
   scored during the one image forward pass, so this is also free.
 
 CLIP is never rerun. Each configuration refits its own clean-only calibration,

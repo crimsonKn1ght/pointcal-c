@@ -1,8 +1,8 @@
 # Curated results
 
-`runs/` is scratch and is not committed -- it is whatever the last invocation
-produced. This directory is the **published artifact**: the specific outputs
-being claimed in the technical note, copied here deliberately.
+`runs/` is scratch and is not committed. It is whatever the last invocation
+produced. This directory is the published artifact: the specific outputs being
+claimed in the technical note, copied here deliberately.
 
 The acceptance criteria require the final artifact to carry raw
 predictions/logits, configs, an environment lock, provenance, logs, the actual

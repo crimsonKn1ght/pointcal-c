@@ -38,13 +38,13 @@ confirms identity but does not check retraction status.
 
 | # | Paper | Venue / year | Zero-shot CLIP-to-3D? | ModelNet40-C? | Calibration / selective prediction? | Overlap with this work | Link |
 |---|---|---|---|---|---|---|---|
-| 1 | ModelNet40-E: An Uncertainty-Aware Benchmark for Point Cloud Classification (Alonso, Li, Li) | arXiv, Aug 2025 | No - PointNet, DGCNN, Point Transformer v3, all trained | No - introduces its own Gaussian-noise benchmark with point-wise uncertainty annotations | Calibration yes (ECE, uncertainty-awareness); selective prediction no | **Closest on the reliability axis.** Same question ("does calibration degrade as corruption severity rises on ModelNet40 objects") but for trained 3D backbones on a different noise benchmark. Does not touch zero-shot CLIP transfer or abstention. | [arXiv:2508.01269](https://arxiv.org/abs/2508.01269) |
-| 2 | Calibrating Uncertainty for Zero-Shot Adversarial CLIP (Lu, Tao, Qiu, Zhang, Yang, Zhao) | ICML 2026 | Partly - zero-shot CLIP, but 2D images only | No | Calibration yes (Dirichlet reparameterization); selective prediction no | **Closest on the CLIP-calibration axis.** Same observation that CLIP is poorly calibrated and that perturbation suppresses uncertainty, but the perturbations are adversarial, the modality is 2D, and there is no 3D projection or abstention. | [arXiv:2512.12997](https://arxiv.org/abs/2512.12997) |
-| 3 | Calib3D: Calibrating Model Preferences for Reliable 3D Scene Understanding (Kong, Xu, Cen, Zhang, Pan, Chen, Liu) | WACV 2025 (Oral) | No - 28 trained 3D models | No - nuScenes, SemanticKITTI, Waymo and their -C variants | Calibration yes (ECE; temperature, logistic and Dirichlet scaling; domain-shift uncertainty); selective prediction no | LiDAR **semantic segmentation**, not object classification. Establishes that post-hoc scaling under 3D domain shift is a live question, which is the premise this work inherits; no overlap in task, data or backbone. | [arXiv:2403.17010](https://arxiv.org/abs/2403.17010) |
-| 4 | MVF-PointCLIP: Training-free multi-view fusion PointCLIP for zero-shot 3D classification (Neurocomputing) | Neurocomputing, 2025 | Yes - training-free, multi-view, CLIP | No - ModelNet10, ModelNet40, ScanObjectNN, all clean | No | **Closest on the method axis, and the reason a novelty claim about cross-view disagreement is not available.** It weights views by inter-view similarity and models the per-sample view distribution (Mahalanobis) to *improve accuracy*. This work uses cross-view divergence for *abstention under corruption* instead, but the underlying "views that disagree are less trustworthy" idea is prior art. | [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0925231225018600) |
-| 5 | Benchmarking Robustness of 3D Point Cloud Recognition Against Common Corruptions (Sun, Zhang, Kailkhura, Yu, Xiao, Mao) - the ModelNet40-C benchmark | ICLR 2022 | No | Yes - defines it | No - accuracy and error rate under augmentation and test-time adaptation | The benchmark this work consumes. Reports roughly 3x error rate on corrupted versus clean inputs for trained models. No zero-shot CLIP baseline and no calibration or abstention analysis. | [arXiv:2201.12296](https://arxiv.org/abs/2201.12296) |
-| 6 | PointCLIP: Point Cloud Understanding by CLIP (Zhang, Guo, Zhang, Li, Miao, Cui, Qiao, Gao, Li) | CVPR 2022 | Yes - defines the approach | No - clean ModelNet40 | No | The method source. Evaluated zero-shot and 16-shot on clean ModelNet40 only. | [arXiv:2112.02413](https://arxiv.org/abs/2112.02413) |
-| 7 | PointCLIP V2: Prompting CLIP and GPT for Powerful 3D Open-world Learning (Zhu, Zhang, He, Guo, Zeng, Qin, Zhang, Gao) | ICCV 2023 | Yes | No - ModelNet10, ModelNet40, ScanObjectNN, all clean | No | Stronger projection and LLM-generated prompts; still evaluated on clean benchmarks only. Confirms that the zero-shot CLIP-to-3D line has not been taken to a corruption benchmark. | [arXiv:2211.11682](https://arxiv.org/abs/2211.11682) |
+| 1 | ModelNet40-E: An Uncertainty-Aware Benchmark for Point Cloud Classification (Alonso, Li, Li) | arXiv, Aug 2025 | No: PointNet, DGCNN, Point Transformer v3, all trained | No: introduces its own Gaussian-noise benchmark with point-wise uncertainty annotations | Calibration yes (ECE, uncertainty-awareness); selective prediction no | **Closest on the reliability axis.** Same question ("does calibration degrade as corruption severity rises on ModelNet40 objects") but for trained 3D backbones on a different noise benchmark. Does not touch zero-shot CLIP transfer or abstention. | [arXiv:2508.01269](https://arxiv.org/abs/2508.01269) |
+| 2 | Calibrating Uncertainty for Zero-Shot Adversarial CLIP (Lu, Tao, Qiu, Zhang, Yang, Zhao) | ICML 2026 | Partly: zero-shot CLIP, but 2D images only | No | Calibration yes (Dirichlet reparameterization); selective prediction no | **Closest on the CLIP-calibration axis.** Same observation that CLIP is poorly calibrated and that perturbation suppresses uncertainty, but the perturbations are adversarial, the modality is 2D, and there is no 3D projection or abstention. | [arXiv:2512.12997](https://arxiv.org/abs/2512.12997) |
+| 3 | Calib3D: Calibrating Model Preferences for Reliable 3D Scene Understanding (Kong, Xu, Cen, Zhang, Pan, Chen, Liu) | WACV 2025 (Oral) | No: 28 trained 3D models | No: nuScenes, SemanticKITTI, Waymo and their -C variants | Calibration yes (ECE; temperature, logistic and Dirichlet scaling; domain-shift uncertainty); selective prediction no | LiDAR **semantic segmentation**, not object classification. Establishes that post-hoc scaling under 3D domain shift is a live question, which is the premise this work inherits; no overlap in task, data or backbone. | [arXiv:2403.17010](https://arxiv.org/abs/2403.17010) |
+| 4 | MVF-PointCLIP: Training-free multi-view fusion PointCLIP for zero-shot 3D classification (Neurocomputing) | Neurocomputing, 2025 | Yes: training-free, multi-view, CLIP | No: ModelNet10, ModelNet40, ScanObjectNN, all clean | No | **Closest on the method axis, and the reason a novelty claim about cross-view disagreement is not available.** It weights views by inter-view similarity and models the per-sample view distribution (Mahalanobis) to *improve accuracy*. This work uses cross-view divergence for *abstention under corruption* instead, but the underlying "views that disagree are less trustworthy" idea is prior art. | [ScienceDirect](https://www.sciencedirect.com/science/article/abs/pii/S0925231225018600) |
+| 5 | Benchmarking Robustness of 3D Point Cloud Recognition Against Common Corruptions (Sun, Zhang, Kailkhura, Yu, Xiao, Mao): the ModelNet40-C benchmark | ICLR 2022 | No | Yes: defines it | No: accuracy and error rate under augmentation and test-time adaptation | The benchmark this work consumes. Reports roughly 3x error rate on corrupted versus clean inputs for trained models. No zero-shot CLIP baseline and no calibration or abstention analysis. | [arXiv:2201.12296](https://arxiv.org/abs/2201.12296) |
+| 6 | PointCLIP: Point Cloud Understanding by CLIP (Zhang, Guo, Zhang, Li, Miao, Cui, Qiao, Gao, Li) | CVPR 2022 | Yes: defines the approach | No: clean ModelNet40 | No | The method source. Evaluated zero-shot and 16-shot on clean ModelNet40 only. | [arXiv:2112.02413](https://arxiv.org/abs/2112.02413) |
+| 7 | PointCLIP V2: Prompting CLIP and GPT for Powerful 3D Open-world Learning (Zhu, Zhang, He, Guo, Zeng, Qin, Zhang, Gao) | ICCV 2023 | Yes | No: ModelNet10, ModelNet40, ScanObjectNN, all clean | No | Stronger projection and LLM-generated prompts; still evaluated on clean benchmarks only. Confirms that the zero-shot CLIP-to-3D line has not been taken to a corruption benchmark. | [arXiv:2211.11682](https://arxiv.org/abs/2211.11682) |
 
 ### Adjacent but non-colliding
 
@@ -55,7 +55,7 @@ confirms identity but does not check retraction status.
   confusingly similar name. Do not conflate them, and state explicitly in the
   technical note which one is used.
 * **LiON** ([arXiv:2309.10230](https://arxiv.org/abs/2309.10230)) applies
-  selective classification to LiDAR outlier detection - point-wise abstention,
+  selective classification to LiDAR outlier detection: point-wise abstention,
   trained, not CLIP, not ModelNet40-C.
 * **BATCLIP** ([arXiv:2412.02837](https://arxiv.org/abs/2412.02837)) does
   bimodal test-time adaptation for CLIP under 2D common corruptions.
@@ -103,8 +103,8 @@ running anything paid.
 * **Does anything cover all three axes?** **No.** Nothing found evaluates
   zero-shot CLIP-to-3D transfer on ModelNet40-C, and nothing found reports
   calibration or selective-prediction metrics for a training-free CLIP-to-3D
-  classifier under corruption. The three literatures - zero-shot CLIP-to-3D,
-  3D corruption robustness, and calibration/abstention - are each active and
+  classifier under corruption. The three literatures (zero-shot CLIP-to-3D,
+  3D corruption robustness, and calibration/abstention) are each active and
   pairwise connected, but the triple appears unoccupied.
 
 ### Resulting claim, in the exact words to use
@@ -138,8 +138,8 @@ technical note must therefore say all of the following:
    August 2025 and the next from ICML 2026; this area is moving faster than the
    audit's shelf life.
 
-If, after results are in, H3 fails - the combined score does not beat
-max-softmax - the claim above still stands, because it claims an audit, not a
+If, after results are in, H3 fails (the combined score does not beat
+max-softmax), the claim above still stands, because it claims an audit, not a
 method that works.
 
 ## Standing constraints on the claim, regardless of outcome

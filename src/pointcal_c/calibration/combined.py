@@ -10,7 +10,7 @@ maximum likelihood against the binary correctness indicator.
 
 Two properties matter and are enforced:
 
-* the score is a *ranking* over predictions, never a class decision -- the
+* the score is a *ranking* over predictions, never a class decision: the
   predicted class always comes from the fixed aggregated logits;
 * nothing corrupted, and no evaluation object, is ever seen during the fit.
 

@@ -190,7 +190,7 @@ def test_ablations_run_offline_from_the_same_cache(populated_run, split):
 
 
 def test_more_views_help_on_the_synthetic_fixture(populated_run, split):
-    """Averaging more independent views should reduce noise -- a fixture check."""
+    """Averaging more independent views should reduce noise: a fixture check."""
     result = run_ablations(populated_run, split, bootstrap_samples=0)
 
     def accuracy(config):

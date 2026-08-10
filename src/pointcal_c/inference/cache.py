@@ -6,8 +6,8 @@ ticket forbids image caches, and logits are three orders of magnitude smaller
 (~1 MB per condition at full evaluation size, ~150 MB for all 76 conditions
 including the canonical-prompt copy).
 
-Everything downstream -- calibration, all four confidence methods, every
-ablation, bootstrap intervals -- is computed from these files on CPU. CLIP is
+Everything downstream (calibration, all four confidence methods, every
+ablation, bootstrap intervals) is computed from these files on CPU. CLIP is
 never rerun for an analysis question.
 """
 

@@ -1,22 +1,27 @@
 # PointCal-C
 
+[![GitHub stars](https://img.shields.io/github/stars/crimsonKn1ght/pointcal-c?style=flat&color=yellow)](https://github.com/crimsonKn1ght/pointcal-c/stargazers)
+[![GitHub forks](https://img.shields.io/github/forks/crimsonKn1ght/pointcal-c?style=flat&color=blue)](https://github.com/crimsonKn1ght/pointcal-c/network/members)
+[![Last commit](https://img.shields.io/github/last-commit/crimsonKn1ght/pointcal-c)](https://github.com/crimsonKn1ght/pointcal-c/commits/main)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Status](https://img.shields.io/badge/status-pre--run%20scaffold-yellow)](docs/preregistration.md)
+
 **Low-cost selective zero-shot 3D recognition under corruption.**
 
-Can a frozen 2D vision-language model make *reliable, selectively abstaining*
-zero-shot 3D predictions when the point clouds are corrupted?
-
-PointCal-C renders each ModelNet40-C point cloud as six orthographic depth maps,
-classifies them with a frozen OpenCLIP ViT-B/32, and then audits how fast
-accuracy **and confidence reliability** fall apart across 15 corruption types at
-5 severities. On top of that it fits three scalars -- one temperature and a
-two-feature logistic blend -- **on clean data only**, and asks whether they buy
+PointCal-C tests whether a frozen 2D vision-language model can make reliable,
+selectively abstaining zero-shot 3D predictions when point clouds are
+corrupted. It renders each ModelNet40-C point cloud as six orthographic depth
+maps, classifies them with a frozen OpenCLIP ViT-B/32, and audits how fast
+accuracy **and confidence reliability** fall apart across 15 corruption types
+at 5 severities. On top of that it fits three scalars (one temperature and a
+two-feature logistic blend), using clean data only, and asks whether they buy
 useful abstention behaviour under shift.
 
 The backbone is never trained. The whole project is budgeted at **under 6
 GPU-hours and about $1.62** on a $0.27/hr RTX A5000.
 
-This is a reliability audit and a bounded abstention baseline. It is not a
-state-of-the-art claim, and a negative result is an acceptable deliverable.
+This is a reliability audit and a bounded abstention baseline, not a
+state-of-the-art claim. A negative result is an acceptable deliverable.
 
 Tracking issue: [GOU-101](https://linear.app/gourab-roy/issue/GOU-101/pointcal-c-low-cost-selective-zero-shot-3d-recognition-under)
 
@@ -49,8 +54,8 @@ bash scripts/run_tier.sh xs           # ~0.5 GPU-h, <= $0.15
 ```
 
 `run_tier.sh` runs inference (the only paid stage), then calibration,
-evaluation, ablations, figures and the results summary -- all of which are free
-CPU work on cached logits.
+evaluation, ablations, figures and the results summary. All of the latter are
+free CPU work on cached logits.
 
 Escalate only if the gates pass: `bash scripts/run_tier.sh s`, then
 `bash scripts/run_tier.sh full`. The full script refuses to start until S-tier
@@ -71,10 +76,11 @@ point cloud (N,1024,3)
   -> four confidence scores over that one prediction
 ```
 
-Per-view logits are the cached primitive, and that single decision is what makes
-the budget work: every ablation (1/3/6 views, prompt ensemble vs single prompt,
-JSD vs logit variance, temperature on/off, disagreement on/off) is recomputed
-offline from the same cache. CLIP is never rerun to answer an analysis question.
+Per-view logits are the cached primitive, and that single decision is what
+makes the budget work: every ablation (1/3/6 views, prompt ensemble vs single
+prompt, JSD vs logit variance, temperature on/off, disagreement on/off) is
+recomputed offline from the same cache. CLIP is never rerun to answer an
+analysis question.
 
 ### The four confidence baselines
 
@@ -91,29 +97,34 @@ raises if one ever does.
 
 ---
 
-## The three things this repo takes seriously
+## Design principles
 
-**1. No object leakage.** The split is over *base object IDs*, not samples.
-Every corruption array is row-aligned with `data_original.npy` -- which the
-loader checks rather than assumes -- so holding an object out of calibration
-holds it out under all 76 conditions. Calibration sees clean data from
-calibration objects and nothing else; corrupted labels, corruption identity and
-severity never touch a fitted parameter. `pointcal-c audit-split` prints the
-proof, and the path guards raise if a calibration ID ever reaches the evaluation
-path.
+### No object leakage
 
-**2. The budget is code, not a promise.** `budget.py` refuses to launch on a GPU
-outside the $0.60/hr ceiling, tracks GPU-hours and dollars per batch, enforces
-the 20 GB VRAM / 25 GB RAM targets, and *extrapolates* runtime so a job that
-would blow the 4-hour cap dies early with a report of how far it got. The
-prescribed response to a breach is falling back a tier. Renting bigger hardware
-is not available -- `hourly_rate()` will refuse it.
+The split is over *base object IDs*, not samples. Every corruption array is
+row-aligned with `data_original.npy` (checked by the loader, not assumed), so
+holding an object out of calibration holds it out under all 76 conditions.
+Calibration sees clean data from calibration objects and nothing else;
+corrupted labels, corruption identity and severity never touch a fitted
+parameter. `pointcal-c audit-split` prints the proof, and the path guards
+raise if a calibration ID ever reaches the evaluation path.
 
-**3. Everything is pre-declared.** Classes, prompts, camera geometry,
-aggregation, disagreement statistic, split seed, coverage levels, tier panels:
-all in `constants.py`, hashed by `spec_hash()`, stamped into every logit cache
-and run manifest. `docs/preregistration.md` states the hypotheses and what would
-falsify each one, *including* what to do when the pre-registered method loses.
+### The budget is enforced in code
+
+`budget.py` refuses to launch on a GPU outside the $0.60/hr ceiling, tracks
+GPU-hours and dollars per batch, enforces the 20 GB VRAM / 25 GB RAM targets,
+and extrapolates runtime so a job that would blow the 4-hour cap dies early
+with a report of how far it got. The prescribed response to a breach is
+falling back a tier. Renting bigger hardware is not available: `hourly_rate()`
+refuses it.
+
+### Everything is pre-declared
+
+Classes, prompts, camera geometry, aggregation, disagreement statistic, split
+seed, coverage levels, and tier panels all live in `constants.py`, hashed by
+`spec_hash()`, and stamped into every logit cache and run manifest.
+`docs/preregistration.md` states the hypotheses and what would falsify each
+one, including what to do when the pre-registered method loses.
 
 ---
 
@@ -140,13 +151,13 @@ docs/               preregistration, compute contract, provenance, novelty audit
 
 Top-1 accuracy; ECE (15 fixed bins) plus an equal-mass adaptive variant; NLL;
 multiclass Brier; AURC and excess AURC; risk-coverage curves; selective risk at
-90/80/70% coverage; degradation vs clean; 95% bootstrap intervals resampled over
-base object IDs. Reported overall, per corruption family, per corruption type,
-per severity, and per individual condition.
+90/80/70% coverage; degradation vs clean; 95% bootstrap intervals resampled
+over base object IDs. Reported overall, per corruption family, per corruption
+type, per severity, and per individual condition.
 
-NLL and Brier need a distribution over all 40 classes, so they are reported for
-`msp` and `temperature` only. For the two ranking scores they are `null`, not a
-lookalike substitute.
+NLL and Brier need a distribution over all 40 classes, so they are reported
+for `msp` and `temperature` only. For the two ranking scores they are `null`,
+not a lookalike substitute.
 
 ## Outputs
 
@@ -166,8 +177,8 @@ runs/<tier>/
 
 ## Status
 
-Scaffold complete and tested on synthetic data; **no paid run has been executed
-yet.**
+Scaffold complete and tested on synthetic data. No paid run has been executed
+yet.
 
 The related-work audit is done ([docs/novelty_search_log.md](docs/novelty_search_log.md),
 2026-08-09). Nothing found occupies the intersection of zero-shot CLIP-to-3D,
@@ -177,10 +188,10 @@ ModelNet40-C, and calibration/selective prediction, so the permitted claim is:
 > selective-prediction audit of training-free CLIP-to-3D transfer under the
 > ModelNet40-C corruption benchmark.
 
-The audit came back clean on the combination, **not** on the components:
-cross-view disagreement is prior art, and calibration degrading under 3D
-corruption is a confirmation rather than a discovery. Both weakenings are
-mandatory in the write-up.
+The audit came back clean on the combination, not on the components: cross-view
+disagreement is prior art, and calibration degrading under 3D corruption is a
+confirmation rather than a discovery. Both weakenings are mandatory in the
+write-up.
 
 Before the first paid run:
 

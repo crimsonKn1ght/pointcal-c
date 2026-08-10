@@ -5,7 +5,7 @@ The Zenodo artifact (CC BY 4.0, https://zenodo.org/records/6017834) ships one
 a single ``label.npy``. Every array is expected to be row-aligned with the clean
 array: row *i* is the same base object under a different corruption. That
 assumption is the backbone of the leakage-free split, so it is *checked*, not
-trusted -- see :meth:`ModelNet40C.verify`.
+trusted. See :meth:`ModelNet40C.verify`.
 
 Arrays are memory-mapped and never fully materialized: the full corpus is ~2 GB
 and the contract caps system RAM at 25 GB while also forbidding image caches.

@@ -2,12 +2,12 @@
 
 Checked **2026-08-09**. Machine-readable counterparts are generated per run:
 
-* `runs/<tier>/provenance/data_manifest.json` - per-file bytes, shapes, SHA-256
-* `runs/<tier>/provenance/run_manifest.json` - environment, git commit, spec hash, config
-* `runs/<tier>/provenance/split_audit.json` - leakage proof
-* `runs/<tier>/ledger_inference.json` - measured GPU-hours, dollars, throughput, peak memory
-* `env/requirements.lock.txt` - `pip freeze` from the pod that produced the results
-* `docs/frozen_spec.json` - the preregistered decisions and their SHA-256
+* `runs/<tier>/provenance/data_manifest.json`: per-file bytes, shapes, SHA-256
+* `runs/<tier>/provenance/run_manifest.json`: environment, git commit, spec hash, config
+* `runs/<tier>/provenance/split_audit.json`: leakage proof
+* `runs/<tier>/ledger_inference.json`: measured GPU-hours, dollars, throughput, peak memory
+* `env/requirements.lock.txt`: `pip freeze` from the pod that produced the results
+* `docs/frozen_spec.json`: the preregistered decisions and their SHA-256
 
 ## Data
 

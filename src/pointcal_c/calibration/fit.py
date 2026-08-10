@@ -1,7 +1,7 @@
 """Clean-only calibration fit, with the leakage and runtime gates attached.
 
-One bundle is fit per *configuration* -- a (view subset, prompt mode,
-disagreement statistic) triple -- because the required ablations change the
+One bundle is fit per *configuration*, a (view subset, prompt mode,
+disagreement statistic) triple, because the required ablations change the
 logits that calibration sees. Every bundle is fit on clean samples from
 calibration object IDs and nothing else. All of it runs on cached logits on CPU
 in well under the ticket's 10-minute gate.

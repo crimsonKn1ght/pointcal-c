@@ -48,6 +48,6 @@ Next: verify shapes, row alignment and checksums against the code's expectations
 
 If `verify-data` reports missing conditions, the on-disk file naming differs
 from constants.corruption_filename(). Fix the mapping there and record the
-correction in docs/provenance.md -- do not rename the released files.
+correction in docs/provenance.md. Do not rename the released files.
 
 EOF

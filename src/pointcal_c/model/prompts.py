@@ -4,9 +4,9 @@ The ensemble in ``constants.PROMPT_ENSEMBLE`` is pre-declared and never searched
 on evaluation data. Two prompt modes exist, and both are fixed before any
 evaluation logits are computed:
 
-* ``ensemble`` -- all templates; per-class text embeddings are averaged after
+* ``ensemble``: all templates; per-class text embeddings are averaged after
   L2 normalization and renormalized (the standard CLIP zero-shot classifier);
-* ``canonical`` -- ``PROMPT_ENSEMBLE[0]`` alone, used only for the required
+* ``canonical``: ``PROMPT_ENSEMBLE[0]`` alone, used only for the required
   prompt-ensemble-versus-single-prompt ablation.
 
 The ablation needs a second text classifier but no second image pass: image

@@ -1,4 +1,4 @@
-"""View aggregation -- the single place the predicted class is decided.
+"""View aggregation: the single place the predicted class is decided.
 
 ``constants.VIEW_AGGREGATION`` fixes this to the unweighted mean of per-view
 logits. It is deliberately parameter-free: with learned view weights the

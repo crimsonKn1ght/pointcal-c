@@ -34,7 +34,7 @@ python -m pointcal_c verify-data --config configs/xs.yaml
 
 That command records per-file bytes, shapes and SHA-256 into
 `runs/<tier>/provenance/data_manifest.json`, and fails loudly if any corruption
-array is not row-aligned with `label.npy` -- the assumption the leakage-free
+array is not row-aligned with `label.npy`, the assumption the leakage-free
 split rests on.
 
 Licence: CC BY 4.0 as declared on [Zenodo record

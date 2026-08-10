@@ -1,9 +1,9 @@
 """Deterministic six-view orthographic depth projection.
 
 Independent implementation of the multi-view depth-map route described in
-PointCLIP (CVPR 2022). The idea -- project a point cloud onto a fixed set of
+PointCLIP (CVPR 2022). The idea (project a point cloud onto a fixed set of
 orthographic views, rasterize a depth map per view, and feed those maps to a
-frozen CLIP image encoder -- is taken from the paper text. None of the code
+frozen CLIP image encoder) is taken from the paper text. None of the code
 below is derived from the PointCLIP repository (see docs/provenance.md).
 
 Pipeline, fixed by ``constants.py`` and hashed into every run manifest:
