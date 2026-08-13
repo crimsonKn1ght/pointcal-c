@@ -4,6 +4,7 @@
 [![GitHub forks](https://img.shields.io/github/forks/crimsonKn1ght/pointcal-c?style=flat&color=blue)](https://github.com/crimsonKn1ght/pointcal-c/network/members)
 [![Last commit](https://img.shields.io/github/last-commit/crimsonKn1ght/pointcal-c)](https://github.com/crimsonKn1ght/pointcal-c/commits/main)
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10%2B-blue.svg)](pyproject.toml)
 [![Status](https://img.shields.io/badge/status-pre--run%20scaffold-yellow)](docs/preregistration.md)
 
 **Low-cost selective zero-shot 3D recognition under corruption.**
