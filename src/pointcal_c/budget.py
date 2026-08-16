@@ -25,6 +25,10 @@ GPU_HOURLY_USD: dict[str, float] = {
     "A40": 0.44,         # fallback
     "RTX 3090": 0.50,    # fallback
     "RTX A6000": 0.53,   # fallback
+    # Added 2026-08-16: A5000/3090 were both "Out of capacity" on Community
+    # Cloud at launch time. Used for a live/demo run, not the paper-track run.
+    # See docs/provenance.md "Compute prices".
+    "RTX 4000 Ada": 0.28,
 }
 
 # Hard machine-price ceiling from the ticket. The RTX 4090 ($0.69/hr) is out.
@@ -97,6 +101,10 @@ class Ledger:
     peak_vram_gb: float = 0.0
     peak_ram_gb: float = 0.0
     items_processed: int = 0
+    # Items served from an existing logit cache rather than recomputed. Counted
+    # for runtime projection but kept out of items_processed, so throughput and
+    # cost describe work actually done on this run.
+    items_skipped_cached: int = 0
     throughput_items_per_s: float = 0.0
     checkpoints: list[dict] = field(default_factory=list)
 
@@ -225,10 +233,18 @@ class BudgetGuard:
             )
 
     def projected_hours(self) -> float | None:
-        """Extrapolated total runtime from measured throughput."""
-        if not self.total_items or self.ledger.items_processed < max(8, self.total_items // 100):
+        """Extrapolated total runtime from measured throughput.
+
+        Cache-served items count towards progress here (they are genuinely done)
+        even though they cost no GPU time, so a resumed run does not project a
+        false overrun from the work it still has left.
+        """
+        done = self.ledger.items_processed + self.ledger.items_skipped_cached
+        if not self.total_items or done < max(8, self.total_items // 100):
             return None
-        frac = self.ledger.items_processed / self.total_items
+        if not self.ledger.items_processed:
+            return None  # nothing recomputed: elapsed time says nothing about rate
+        frac = done / self.total_items
         return self.elapsed_hours / frac
 
     def summary(self) -> Ledger:

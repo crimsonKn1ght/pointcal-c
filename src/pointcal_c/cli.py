@@ -58,7 +58,11 @@ def cmd_verify_data(args) -> int:
     out = Path(cfg.run_dir) / "provenance" / "data_manifest.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(f"objects: {report['num_objects']}, points/cloud: {report['points_per_cloud']}")
+    lo, hi = report["points_per_cloud_range"] or (None, None)
+    print(
+        f"objects: {report['num_objects']}, points/cloud: {report['points_per_cloud']} "
+        f"(clean; varies {lo}-{hi} across corruptions)"
+    )
     print(f"conditions present: {report['conditions_present']}/76")
     if report["conditions_missing"]:
         print(f"missing: {', '.join(report['conditions_missing'][:10])} ...")
