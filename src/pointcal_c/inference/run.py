@@ -194,8 +194,10 @@ def run_inference(
             path = cache_path(cfg.logits_dir, key)
             if path.exists() and not overwrite:
                 skipped.append(key)
-                # Still account for the work so projections stay honest.
-                guard.ledger.items_processed += int(ids.size) * constants.NUM_VIEWS
+                # Counted separately from items_processed: this work was served
+                # from cache, so folding it into the throughput/cost figures
+                # would report GPU work that never happened on this run.
+                guard.ledger.items_skipped_cached += int(ids.size) * constants.NUM_VIEWS
                 continue
             cache = infer_condition(
                 cfg, dataset, backbone, corruption, severity, ids, guard=guard, progress=progress
@@ -205,7 +207,17 @@ def run_inference(
             guard.tick(items=0, label=key)
 
     ledger = guard.summary()
-    ledger.write(Path(cfg.run_dir) / "ledger_inference.json")
+    ledger_path = Path(cfg.run_dir) / "ledger_inference.json"
+    if written or not ledger_path.exists():
+        ledger.write(ledger_path)
+    else:
+        # Every condition came from cache. Overwriting here would replace the
+        # real cost of the run that populated the cache with a near-zero one,
+        # which is how a rerun silently erases its own provenance.
+        print(
+            f"all {len(skipped)} conditions served from cache; "
+            f"keeping the existing {ledger_path} rather than overwriting it"
+        )
 
     return {
         **summary,
