@@ -127,7 +127,10 @@ SEVERITIES: tuple[int, ...] = (1, 2, 3, 4, 5)
 CLEAN_CONDITION = "clean"
 
 # On-disk names in the Zenodo artifact (https://zenodo.org/records/6017834).
-# Severity is stored 0-indexed on disk; this project reports it 1-indexed.
+# Verified against the real download on 2026-08-16: severity is stored
+# 1-indexed on disk (data_<corruption>_1..5.npy), matching how this project
+# reports it. The earlier 0-indexed assumption was wrong and is corrected in
+# corruption_filename() below; see docs/provenance.md.
 CLEAN_ARRAY_FILENAME = "data_original.npy"
 LABEL_FILENAME = "label.npy"
 
@@ -138,7 +141,7 @@ def corruption_filename(corruption: str, severity: int) -> str:
         raise KeyError(f"unknown corruption {corruption!r}")
     if severity not in SEVERITIES:
         raise ValueError(f"severity must be one of {SEVERITIES}, got {severity}")
-    return f"data_{corruption}_{severity - 1}.npy"
+    return f"data_{corruption}_{severity}.npy"
 
 
 # The S-tier corruption panel: four types spanning all three families, frozen

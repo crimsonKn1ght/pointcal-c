@@ -187,15 +187,27 @@ class ModelNet40C:
             )
             total_rows += int(arr.shape[0])
 
+        # Points-per-cloud legitimately varies across conditions: occlusion,
+        # lidar and cutout drop points, upsampling and density_inc add them.
+        # Verified against the real corpus 2026-08-16 (649..2048). It is not a
+        # corpus defect, so it is recorded rather than raised on. The invariant
+        # the object-grouped split actually depends on is row alignment, and
+        # that is enforced per-condition in ``array()``.
         point_counts = {rec.shape[1] for rec in records}
-        if len(point_counts) > 1:
-            raise ValueError(f"inconsistent points-per-cloud across conditions: {sorted(point_counts)}")
+        clean_key = condition_key(constants.CLEAN_CONDITION, None)
+        clean_points = next(
+            (rec.shape[1] for rec in records if rec.condition == clean_key), None
+        )
 
         label_path = self.data_dir / constants.LABEL_FILENAME
         return {
             "data_dir": str(self.data_dir),
             "num_objects": self.num_objects,
-            "points_per_cloud": point_counts.pop() if point_counts else None,
+            "points_per_cloud": clean_points,
+            "points_per_cloud_range": [min(point_counts), max(point_counts)] if point_counts else None,
+            "points_per_cloud_by_condition": {
+                rec.condition: rec.shape[1] for rec in records
+            },
             "conditions_present": len(records),
             "conditions_missing": [condition_key(c, s) for c, s in self.missing_conditions()],
             "total_rows_across_conditions": total_rows,

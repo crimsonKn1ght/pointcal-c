@@ -178,8 +178,27 @@ runs/<tier>/
 
 ## Status
 
-Scaffold complete and tested on synthetic data. No paid run has been executed
-yet.
+**All three tiers executed 2026-08-16** on a Runpod RTX 4000 Ada ($0.28/hr;
+the contract's A5000 and 3090 were both out of capacity, substitution recorded
+in `docs/provenance.md`). Measured inference cost, from the run ledgers:
+
+| tier | conditions | GPU-hours | USD | views/s | peak VRAM |
+|---|---|---|---|---|---|
+| XS | 5 | 0.001 | 0.0003 | 1091 | 2.5 GB |
+| S | 13 | 0.015 | 0.004 | 2816 | 12.1 GB |
+| full | 76 | 0.089 | 0.025 | 2808 | 12.1 GB |
+
+**0.105 GPU-hours and $0.03 total**, against a 6 GPU-hour / $1.62 budget. The
+gates were never approached; the binding constraint turned out to be the free
+CPU bootstrap, not the GPU, so `full` runs at 200 bootstrap replicates (see
+`configs/full.yaml`).
+
+Headline, all 75 corrupted conditions pooled, 1975 evaluation objects: accuracy
+falls 0.2896 (clean) -> 0.2354, and MSP calibration degrades (ECE 0.1160 ->
+0.1416). The clean-fit combined score holds ECE at **0.0229** under corruption
+and lowers AURC from 0.5217 to 0.5008. All three pre-registered hypotheses
+resolved True; the AURC gain is real but small, and must be read against the
+intervals in `results.csv`.
 
 The related-work audit is done ([docs/novelty_search_log.md](docs/novelty_search_log.md),
 2026-08-09). Nothing found occupies the intersection of zero-shot CLIP-to-3D,
@@ -194,13 +213,17 @@ disagreement is prior art, and calibration degrading under 3D corruption is a
 confirmation rather than a discovery. Both weakenings are mandatory in the
 write-up.
 
-Before the first paid run:
+Pre-flight checklist, as resolved by the 2026-08-16 run:
 
-- [ ] Run `verify-data` against the real corpus and confirm the corruption file
-      naming in `constants.corruption_filename()`.
-- [ ] Pin `model.pinned_checkpoint_sha256` from the first successful download.
-- [ ] Re-run `pointcal-c freeze` and record the spec hash in
-      `docs/provenance.md`.
+- [x] `verify-data` against the real corpus: **76/76 conditions present**. The
+      naming assumption was wrong -- severity is stored **1-indexed** on disk,
+      not 0-indexed -- and `constants.corruption_filename()` was corrected.
+      Points-per-cloud also varies (649-2048) rather than being a uniform 1024,
+      which the loader now records instead of rejecting.
+- [x] Pinned `model.pinned_checkpoint_sha256` to `1bd3c717...80ad`, verified by
+      a subsequent run passing the check.
+- [x] Spec hash re-confirmed **unchanged** at `ca487597...dcc820`: both
+      corrections are I/O-path only and touch nothing in `frozen_spec()`.
 - [ ] Re-run the bibliography through a working citation checker; the audit
       confirmed identifiers by direct fetch but could not check retractions.
 

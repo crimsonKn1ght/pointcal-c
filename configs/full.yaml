@@ -17,12 +17,14 @@ data:
   max_calibration_objects: null
 
 projection:
-  batch_size: 64
+  # See configs/s.yaml: 1024 objects x 6 views per CLIP forward.
+  batch_size: 1024
 
 model:
   precision: fp16
   cache_dir: .cache/open_clip
-  pinned_checkpoint_sha256: null
+  # Pinned 2026-08-16 from the first successful download; a mismatch now aborts.
+  pinned_checkpoint_sha256: 1bd3c7172de5b207ceac554f5ab5266166f3b9baccc9af5989bc801016d080ad
 
 conditions:
   include_clean: true
@@ -45,12 +47,18 @@ conditions:
   severities: [1, 2, 3, 4, 5]
 
 evaluation:
-  bootstrap_samples: 1000
+  # Reduced from 1000 on 2026-08-16. At 1000 the CPU bootstrap over 76
+  # conditions runs ~2 h against ~5 min of GPU work; 200 matches the XS tier and
+  # brings the tier in at ~30 min. The logit cache is unaffected, so deeper
+  # intervals can be recomputed later for free (docs/compute_contract.md).
+  bootstrap_samples: 200
   bootstrap_seed: 7
 
 budget:
-  gpu: RTX A5000
-  max_gpu_hours: 3.4
+  # See configs/s.yaml. 3.4 GPU-h at $0.28/hr would cost $0.95 and breach the
+  # $0.92 gate; the hour ceiling is tightened to 3.2 ($0.90) instead.
+  gpu: RTX 4000 Ada
+  max_gpu_hours: 3.2
   max_usd: 0.92
   max_wall_hours: 4.0
   max_vram_gb: 20.0
