@@ -13,13 +13,16 @@ data:
   max_calibration_objects: 100
 
 projection:
-  batch_size: 64
+  # 256 objects x 6 views = 1536 images per CLIP forward. Raised from 64 on
+  # 2026-08-16 to actually feed the GPU; batching cannot change the frozen
+  # forward pass (ViT uses LayerNorm, not BatchNorm), only throughput.
+  batch_size: 256
 
 model:
   precision: fp16
   cache_dir: .cache/open_clip
-  # Filled in after the first successful download; a mismatch then aborts the run.
-  pinned_checkpoint_sha256: null
+  # Pinned 2026-08-16 from the first successful download; a mismatch now aborts.
+  pinned_checkpoint_sha256: 1bd3c7172de5b207ceac554f5ab5266166f3b9baccc9af5989bc801016d080ad
 
 conditions:
   include_clean: true
@@ -31,7 +34,7 @@ evaluation:
   bootstrap_seed: 7
 
 budget:
-  gpu: RTX A5000
+  gpu: RTX 4000 Ada       # substituted 2026-08-16: A5000/3090 out of capacity
   max_gpu_hours: 0.5
   max_usd: 0.15
   max_wall_hours: 4.0

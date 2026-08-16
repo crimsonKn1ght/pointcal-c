@@ -13,12 +13,15 @@ data:
   max_calibration_objects: null
 
 projection:
-  batch_size: 64
+  # 1024 objects x 6 views = 6144 images per CLIP forward. XS measured 2.53 GB
+  # peak at 256, so this stays far under the 20 GB gate while keeping the GPU fed.
+  batch_size: 1024
 
 model:
   precision: fp16
   cache_dir: .cache/open_clip
-  pinned_checkpoint_sha256: null
+  # Pinned 2026-08-16 from the first successful download; a mismatch now aborts.
+  pinned_checkpoint_sha256: 1bd3c7172de5b207ceac554f5ab5266166f3b9baccc9af5989bc801016d080ad
 
 conditions:
   include_clean: true
@@ -30,8 +33,11 @@ evaluation:
   bootstrap_seed: 7
 
 budget:
-  gpu: RTX A5000
-  max_gpu_hours: 2.0
+  # Substituted 2026-08-16 (A5000/3090 out of capacity). At $0.28/hr the old
+  # 2.0 GPU-h ceiling would cost $0.56 and breach the $0.54 gate, so the hour
+  # ceiling is tightened to 1.9 ($0.53) rather than the dollar gate raised.
+  gpu: RTX 4000 Ada
+  max_gpu_hours: 1.9
   max_usd: 0.54
   max_wall_hours: 4.0
   max_vram_gb: 20.0
