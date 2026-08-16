@@ -14,6 +14,7 @@ Community Cloud list prices; re-check before launching and record any change in
 | Fallback | A40 | 0.44 | allowed |
 | Fallback | RTX 3090 | 0.50 | allowed |
 | Fallback | RTX A6000 | 0.53 | allowed |
+| Fallback (added 2026-08-16, live-test run; A5000/3090 out of capacity) | RTX 4000 Ada 20 GB | 0.28 | allowed |
 | - | RTX 4090 | 0.69 | **refused** (over the $0.60/hr ceiling) |
 
 One GPU only. `budget.detect_gpu()` reads the device name at startup and raises
