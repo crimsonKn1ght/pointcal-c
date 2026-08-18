@@ -195,9 +195,14 @@ CPU bootstrap, not the GPU, so `full` runs at 200 bootstrap replicates (see
 Headline, all 75 corrupted conditions pooled, 1975 evaluation objects: accuracy
 falls 0.2896 (clean) -> 0.2354, and MSP calibration degrades (ECE 0.1160 ->
 0.1416). The clean-fit combined score holds ECE at **0.0229** under corruption
-and lowers AURC from 0.5217 to 0.5008. All three pre-registered hypotheses
-resolved True; the AURC gain is real but small, and must be read against the
-intervals in `results.csv`.
+and lowers AURC from 0.5217 to 0.5008. Of the four
+pre-registered hypotheses, three are mechanically checked: H2 and H3 resolved
+True, and H1 holds on four of its five named metrics -- accuracy, NLL, Brier and
+AURC all worsen monotonically with severity, but ECE does not. A paired
+object-grouped bootstrap puts both ECE reversals within noise of zero, so H1 is
+reported as supported in direction but not strictly monotonic. H4 is read off
+the family-scope rows rather than reduced to a verdict. The AURC gain is real
+but small, and must be read against the intervals in `results.csv`.
 
 The related-work audit is done ([docs/novelty_search_log.md](docs/novelty_search_log.md),
 2026-08-09). Nothing found occupies the intersection of zero-shot CLIP-to-3D,

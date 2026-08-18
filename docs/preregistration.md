@@ -62,11 +62,19 @@ corruption array is row-aligned with `data_original.npy` (checked, not assumed),
 holding out an object ID holds it out under all 15 corruptions and all 5
 severities.
 
-**Calibration.** Fit on clean samples from calibration objects only. Three
+**Calibration.** Fit on clean samples from calibration objects only. Four
 scalars total:
 
 1. temperature `T`, minimizing NLL;
-2-3. the two logistic weights (plus bias) of the combined score.
+2. the bias of the combined score;
+3. the weight on calibrated confidence;
+4. the weight on cross-view disagreement.
+
+The parameter set is unchanged from the original registration; only the count
+was stated wrongly. The intercept of the logistic blend is a free, unpenalised
+parameter of the fit (L2 applies to the two weights only), so it counts. This
+is an arithmetic correction, not a protocol change: no hypothesis, metric,
+threshold or fitting procedure is altered by it.
 
 Corrupted labels, corruption identity and severity never influence any fitted
 parameter, prompt, threshold or view geometry.
