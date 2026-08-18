@@ -15,6 +15,8 @@ Leakage rules enforced here:
 
 from __future__ import annotations
 
+import dataclasses
+import json
 import time
 from pathlib import Path
 
@@ -23,7 +25,7 @@ import torch
 from tqdm import tqdm
 
 from pointcal_c import constants
-from pointcal_c.budget import BudgetGuard
+from pointcal_c.budget import BudgetGuard, Ledger
 from pointcal_c.config import RunConfig
 from pointcal_c.data.modelnet40c import ModelNet40C, condition_key
 from pointcal_c.data.splits import Split, assert_evaluation_only
@@ -92,6 +94,9 @@ def plan_conditions(
         "images_total": int(sum(ids.size for _, _, ids in plan) * constants.NUM_VIEWS),
     }
     return plan, summary
+
+
+_LEDGER_FIELDS = frozenset(f.name for f in dataclasses.fields(Ledger))
 
 
 @torch.no_grad()
@@ -208,6 +213,7 @@ def run_inference(
 
     ledger = guard.summary()
     ledger_path = Path(cfg.run_dir) / "ledger_inference.json"
+    served_from_cache = bool(skipped) and not written
     if written or not ledger_path.exists():
         ledger.write(ledger_path)
     else:
@@ -218,11 +224,21 @@ def run_inference(
             f"all {len(skipped)} conditions served from cache; "
             f"keeping the existing {ledger_path} rather than overwriting it"
         )
+        # Report the preserved measurement rather than this invocation's
+        # near-zero one. The caller stamps this ledger into the run manifest, so
+        # returning the in-memory guard here is what previously left the manifest
+        # contradicting ledger_inference.json.
+        try:
+            stored = json.loads(ledger_path.read_text(encoding="utf-8"))
+            ledger = Ledger(**{f: stored[f] for f in stored if f in _LEDGER_FIELDS})
+        except (OSError, ValueError, TypeError) as exc:
+            print(f"  could not read back {ledger_path} ({exc}); reporting this run's ledger")
 
     return {
         **summary,
         "conditions_written": written,
         "conditions_skipped_existing": skipped,
+        "served_from_cache": served_from_cache,
         "wall_seconds": time.perf_counter() - started,
         "ledger": ledger,
         "backbone": backbone.info().__dict__,

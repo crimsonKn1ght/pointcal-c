@@ -14,7 +14,7 @@ selectively abstaining zero-shot 3D predictions when point clouds are
 corrupted. It renders each ModelNet40-C point cloud as six orthographic depth
 maps, classifies them with a frozen OpenCLIP ViT-B/32, and audits how fast
 accuracy **and confidence reliability** fall apart across 15 corruption types
-at 5 severities. On top of that it fits three scalars (one temperature and a
+at 5 severities. On top of that it fits four scalars (one temperature and a
 two-feature logistic blend), using clean data only, and asks whether they buy
 useful abstention behaviour under shift.
 
@@ -168,7 +168,7 @@ runs/<tier>/
   results/results.csv|.json     the machine-readable metrics table
   results/ablations.csv         every required ablation
   results/predictions.npz       per-sample confidences and correctness
-  results/calibration.json      the three fitted scalars
+  results/calibration.json      the four fitted scalars
   results/examples.json         confidently wrong / correctly abstained / high disagreement
   results/results_summary.md    auto-generated tables and hypothesis checks
   figures/fig1..fig4            accuracy, ECE, risk-coverage, cost

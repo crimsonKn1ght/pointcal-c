@@ -81,9 +81,44 @@ def _hypothesis_section(rows: list[dict]) -> list[str]:
     for severity in constants.SEVERITIES:
         cells = [val("severity", str(severity), "temperature", m) for m in ("accuracy", "ece", "nll", "brier", "aurc")]
         lines.append(f"| {severity} | " + " | ".join(f"{c:.4f}" for c in cells) + " |")
-    accs = [val("severity", str(s), "temperature", "accuracy") for s in constants.SEVERITIES]
-    monotone = all(a >= b - 1e-9 for a, b in zip(accs, accs[1:]))
-    lines += ["", f"Accuracy is monotonically non-increasing in severity: **{monotone}**.", ""]
+    # The pre-registered H1 names five metrics, not just accuracy, so the verdict
+    # is reported per metric. Declaring H1 on accuracy alone would overstate it:
+    # a single non-monotonic metric is exactly the partial outcome the
+    # pre-registration asks to be reported rather than smoothed over.
+    h1_metrics = (
+        ("accuracy", "non-increasing"),
+        ("ece", "non-decreasing"),
+        ("nll", "non-decreasing"),
+        ("brier", "non-decreasing"),
+        ("aurc", "non-decreasing"),
+    )
+    lines += ["", "| metric | predicted direction | monotonic across severities 1-5 |", "|---|---|---|"]
+    verdicts = {}
+    for metric, direction in h1_metrics:
+        series = [val("severity", str(s), "temperature", metric) for s in constants.SEVERITIES]
+        if any(v != v for v in series):  # NaN: metric undefined for this method
+            verdicts[metric] = None
+            lines.append(f"| {metric.upper()} | {direction} | n/a |")
+            continue
+        if direction == "non-increasing":
+            ok = all(a >= b - 1e-9 for a, b in zip(series, series[1:]))
+        else:
+            ok = all(a <= b + 1e-9 for a, b in zip(series, series[1:]))
+        verdicts[metric] = ok
+        lines.append(f"| {metric.upper()} | {direction} | **{ok}** |")
+
+    checked = {m: v for m, v in verdicts.items() if v is not None}
+    failed = sorted(m.upper() for m, v in checked.items() if not v)
+    holds = bool(checked) and not failed
+    lines += ["", f"H1 holds on every named metric: **{holds}**."]
+    if failed:
+        lines.append(
+            f"Monotonicity does not hold for {', '.join(failed)}; H1 is supported on "
+            f"the remaining {len(checked) - len(failed)} of {len(checked)} named metrics, "
+            "not as a whole. Departures may still be small relative to the bootstrap "
+            "intervals in results.csv, which this mechanical check does not consult."
+        )
+    lines.append("")
 
     # H2: clean-only temperature improves calibration but not fully under shift.
     clean_msp = val("overall", "clean", "msp", "ece")
@@ -171,7 +206,9 @@ def write_summary(cfg: RunConfig) -> Path:
             f"- calibration-split accuracy: {bundle['calibration_accuracy']:.4f}",
             f"- fit time: {bundle['fit_seconds']:.2f}s (gate: 600s)",
             "",
-            "Three scalars in total. The backbone contributes zero fitted parameters.",
+            "Four fitted scalars in total: the temperature, plus the bias and two "
+            "weights of the logistic blend. The backbone contributes zero fitted "
+            "parameters.",
             "",
         ]
         if bundle.get("degenerate"):
@@ -209,7 +246,7 @@ def write_summary(cfg: RunConfig) -> Path:
         "- `results.csv` / `results.json` - full metrics table with intervals",
         "- `ablations.csv` - view count, prompt mode, and disagreement-statistic ablations",
         "- `predictions.npz` - per-sample confidences and correctness",
-        "- `calibration.json` - the three fitted scalars",
+        "- `calibration.json` - the four fitted scalars",
         "- `examples.json` - confidently wrong / correctly abstained / high-disagreement cases",
         "",
     ]
