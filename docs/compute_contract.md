@@ -45,7 +45,7 @@ measured throughput after every batch and raises *before* the cap is reached,
 reporting how far into the run it was.
 
 Calibration "training" is capped at 10 minutes and normally takes under a
-second: it is three scalars fit on cached logits on CPU
+second: it is four scalars fit on cached logits on CPU
 (`assert_calibration_runtime`).
 
 ## Where the money actually goes

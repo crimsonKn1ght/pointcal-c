@@ -102,6 +102,36 @@ def test_ledger_records_what_the_acceptance_criteria_ask_for(tmp_path):
     assert payload["checkpoints"][0]["label"] == "clean"
 
 
+def test_a_cache_hit_rerun_reports_the_preserved_ledger_not_its_own(tmp_path):
+    """A rerun that recomputes nothing must not report near-zero cost.
+
+    Regression: the guard's own ledger was stamped into the run manifest even
+    when the real ledger on disk was deliberately preserved, so the manifest
+    claimed 0 items at 0 views/s for a run that had actually cost $0.025.
+    """
+    from pointcal_c.budget import Ledger
+    from pointcal_c.inference.run import _LEDGER_FIELDS
+
+    real = Ledger(
+        gpu="RTX 4000 Ada", hourly_usd=0.28, tier="full",
+        wall_seconds=321.78, gpu_hours=0.0894, usd=0.02503,
+        peak_vram_gb=12.105, peak_ram_gb=3.802,
+        items_processed=903558, throughput_items_per_s=2807.99,
+    )
+    path = tmp_path / "ledger_inference.json"
+    real.write(path)
+
+    stored = json.loads(path.read_text(encoding="utf-8"))
+    recovered = Ledger(**{f: stored[f] for f in stored if f in _LEDGER_FIELDS})
+
+    assert recovered.items_processed == 903558
+    assert recovered.throughput_items_per_s == pytest.approx(2807.99)
+    assert recovered.usd == pytest.approx(0.02503)
+    assert recovered.peak_vram_gb == pytest.approx(12.105)
+    # every persisted field must survive the round trip into the manifest
+    assert set(stored) <= set(_LEDGER_FIELDS)
+
+
 def test_calibration_runtime_gate():
     assert_calibration_runtime(59.0)
     with pytest.raises(BudgetExceeded, match="10 min"):

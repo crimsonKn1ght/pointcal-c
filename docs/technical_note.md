@@ -17,8 +17,8 @@ how accurate this is; it is how *trustworthy its confidence* is once the point
 clouds are corrupted, and whether cheap post-hoc machinery can recover useful
 selective behaviour.
 
-Three scalars are fit, all on clean data from a held-out calibration set of
-objects: one temperature, and two weights (plus bias) blending calibrated
+Four scalars are fit, all on clean data from a held-out calibration set of
+objects: one temperature, and a bias plus two weights blending calibrated
 confidence with cross-view disagreement.
 
 **Contribution.** To our knowledge, as of August 2026, this is the first
@@ -157,7 +157,7 @@ State these plainly; they are not hedges, they are the boundary of the claim.
    calibrate differently, and the budget deliberately excludes testing that.
 3. **One projection scheme.** Depth-only, six fixed cameras, no colour, no
    learned view weighting. A different renderer could change every number here.
-4. **Post-hoc only.** Three fitted scalars. This is not a robustness method and
+4. **Post-hoc only.** Four fitted scalars. This is not a robustness method and
    makes no claim to be one.
 5. **Calibration set size.** `[FILL]` clean objects. Temperature scaling is
    low-variance, but the combined score's two weights are fit on the same
